@@ -1,0 +1,410 @@
+using System.Windows;
+using System.Windows.Documents;
+using System.Windows.Input;
+
+namespace CyberSecurityAwarenessChatbot
+{
+
+    public partial class ProcessUserMessage : Window
+    {
+        private readonly ChatbotService _chatbotService;
+
+        private readonly DatabaseHelper _databaseHelper;
+
+        private readonly ActivityLogService _activityLogService;
+
+        public ProcessUserMessage()
+        {
+            InitializeComponent();
+
+            _databaseHelper = new DatabaseHelper();
+            _activityLogService = new ActivityLogService();
+            _chatbotService = new ChatbotService();
+
+
+            btnSend.Click += BtnSend_Click;
+            txtUserInput.KeyDown += TxtUserInput_KeyDown;
+
+            InitializeApplication();
+        }
+        private void InitializeApplication()
+        {
+            txtDate.Text = DateTime.Now.ToString("dddd, dd MMMM yyyy");
+
+            ShowWelcomeMessage();
+
+            TestDatabaseConnection();
+
+            _activityLogService.LogActivity("Application started.");
+
+
+        }
+        private void ShowWelcomeMessage()
+        {
+            AppendBotMessage(
+@"Welcome to the CyberSecurity Awareness Chatbot!
+
+I can help you with:
+
+• Cybersecurity advice
+• Password safety
+• Phishing awareness
+• Managing reminders
+• Starting the cybersecurity quiz
+• Viewing your activity log
+
+Type 'help' to see available commands.");
+        }
+        private void TestDatabaseConnection()
+        {
+            try
+            {
+                using object connection = _databaseHelper.GetConnection();
+
+                connection.Open();
+
+                txtConnectionStatus.Text = "Database: Connected";
+                txtApplicationStatus.Text = "Ready";
+            }
+            catch (Exception)
+            {
+                txtConnectionStatus.Text = "Database: Disconnected";
+                txtApplicationStatus.Text = "Running without database";
+            }
+        }
+        private void AppendBotMessage(string message)
+        {
+            Paragraph paragraph = new Paragraph();
+
+            paragraph.Inlines.Add(
+                new Bold(new Run("Bot: "))
+            );
+
+            paragraph.Inlines.Add(new Run(message));
+
+            rtbChat.Document.Blocks.Add(paragraph);
+
+            rtbChat.ScrollToEnd();
+        }
+
+        private void AppendUserMessage(string message)
+        {
+            Paragraph paragraph = new Paragraph();
+
+            paragraph.Inlines.Add(
+                new Bold(new Run("You: "))
+            );
+
+            paragraph.Inlines.Add(new Run(message));
+
+            rtbChat.Document.Blocks.Add(paragraph);
+
+            rtbChat.ScrollToEnd();
+        }
+        private void BtnSend_Click(object sender, RoutedEventArgs e)
+        {
+            ProcessUserMessage();
+        }
+
+        private void ProcessUserMessage()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void TxtUserInput_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                ProcessUserMessage();
+                e.Handled = true;
+            }
+        }
+        internal class DatabaseHelper
+        {
+            internal object GetConnection()
+        internal class DatabaseHelper
+        {
+            internal object GetConnection()
+            {
+                throw new NotImplementedException();
+            }
+        }
+        internal class ActivityLogService
+        {
+            internal void LogActivity(string v)
+            {
+                throw new NotImplementedException();
+            }
+        }
+        internal class ChatbotService
+        {
+            public ChatbotService()
+            {
+            }
+        }
+
+        private ProcessUserMessage()
+        {
+
+            string userMessage = txtUserInput.Text.Trim();
+
+            if (string.IsNullOrWhiteSpace(userMessage))
+            {
+                MessageBox.Show(
+                    "Please enter a message before clicking Send.",
+                    "Empty Message",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
+
+                return;
+            }
+
+            AppendUserMessage(userMessage);
+
+            _activityLogService.LogActivity(
+                $"User entered message: {userMessage}");
+
+            txtUserInput.Clear();
+
+            GenerateChatbotResponse(userMessage);
+        }
+        private void GenerateChatbotResponse(string message)
+        {
+            
+            string sentiment = _sentimentService.DetectSentiment(message);
+
+            string emotionResponse = _sentimentService.GetSentimentResponse(sentiment);
+
+            if (!string.IsNullOrEmpty(emotionResponse))
+            {
+                AppendBotMessage(emotionResponse);
+            }
+            string input = message.ToLower();
+
+            if (input.Contains("hello") ||
+                input.Contains("hi") ||
+                input.Contains("hey"))
+            {
+                AppendBotMessage(
+                    "Hello!  I'm your Cybersecurity Awareness Assistant. How can I help you today?");
+
+                return;
+            }
+
+            if (input.Contains("help"))
+            {
+                AppendBotMessage(
+
+@"Here are some things you can ask me:
+
+• Start Quiz
+
+• Add Reminder
+
+• Show Activity Log
+
+• Password Tips
+
+• Phishing Advice
+
+• Safe Browsing
+
+• Social Engineering
+
+• Enable 2FA");
+
+                return;
+            }
+
+            if (input.Contains("password"))
+            {
+                AppendBotMessage(
+
+@"A strong password should:
+
+ Be at least 12 characters long
+
+ Include uppercase letters
+
+ Include lowercase letters
+
+ Include numbers
+
+ Include special characters
+
+Never reuse passwords on multiple websites.");
+
+                return;
+            }
+
+            if (input.Contains("phishing"))
+            {
+                AppendBotMessage(
+
+@"Phishing emails often:
+
+• Ask for personal information
+
+• Create urgency
+
+• Contain suspicious links
+
+• Have spelling mistakes
+
+Always verify the sender before clicking links.");
+                return;
+            }
+
+            if (input.Contains("safe browsing") ||
+                input.Contains("browser"))
+            {
+                AppendBotMessage(
+
+@"Safe browsing tips:
+
+ Keep your browser updated
+
+ Avoid suspicious websites
+
+ Never download unknown files
+
+ Check for HTTPS before entering passwords.");
+
+                return;
+            }
+            if (input.Contains("2fa") ||
+                input.Contains("two factor"))
+            {
+                AppendBotMessage(
+
+@"Two-Factor Authentication adds an extra layer of security.
+
+Even if someone steals your password, they still cannot access your account without the second verification step.");
+
+                return;
+            }
+            if (input.Contains("reminder") ||
+                input.Contains("remind"))
+            {
+                AppendBotMessage(
+
+@"Opening the Reminder Manager...
+
+Please enter:
+
+Title
+
+Description
+
+Reminder Date");
+
+
+                return;
+            }
+
+            if (input.Contains("quiz"))
+            {
+                AppendBotMessage(
+
+@"Starting the Cybersecurity Quiz...
+
+Good luck!");
+
+                return;
+            }
+
+            if (input.Contains("activity"))
+            {
+                AppendBotMessage(
+
+@"Opening your recent activity...
+
+(Connected in ActivityLogService later)");
+
+                return;
+            }
+            if (input.Contains("bye"))
+            {
+                AppendBotMessage(
+
+@"Goodbye!
+
+Stay safe online and remember to protect your personal information.");
+
+                return;
+            }
+            AppendBotMessage(
+
+@"Sorry, I didn't understand that.
+
+Try asking me about:
+
+• Passwords
+
+• Phishing
+
+• Safe Browsing
+
+• Cyber Quiz
+
+• Reminders
+
+• Activity Log
+
+or type 'Help'.");
+
+            /// <summary>
+            /// Creates a sample reminder.
+            /// Later this will be replaced by a proper Reminder Window.
+            /// </summary>
+private void CreateReminder()
+        {
+            Reminder reminder = new Reminder
+            {
+                Title = "Enable Two-Factor Authentication",
+
+                Description =
+                "Enable 2FA on your email account.",
+
+                ReminderDate =
+                DateTime.Now.AddDays(2),
+
+                Completed = false
+            };
+
+            bool success =
+                _reminderService.AddReminder(reminder);
+
+            if (success)
+            {
+                AppendBotMessage(
+
+        @" Reminder Added Successfully!
+
+Title:
+Enable Two-Factor Authentication
+
+Due:
+" + reminder.ReminderDate.ToShortDateString());
+
+                _activityLogService.LogActivity(
+                    "Reminder Added");
+            }
+            else
+            {
+                AppendBotMessage(
+                    " Unable to save reminder.");
+            }
+        }
+
+        
+        private readonly NLPService _nlpService;
+        NLPService = private new NLPService();
+
+        private readonly ReminderService _reminderService;
+        ReminderService = private new ReminderService();
+    }
+
+}
+
+
