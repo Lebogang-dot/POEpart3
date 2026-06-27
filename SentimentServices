@@ -1,0 +1,15 @@
+namespace CyberSecurityAwarenessChatbot
+{
+    internal class _sentimentService
+    {
+        internal static string DetectSentiment(string message)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal static string GetSentimentResponse(string sentiment)
+        {
+            throw new NotImplementedException();
+        }
+    }
+}
